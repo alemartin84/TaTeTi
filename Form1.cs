@@ -38,24 +38,34 @@ namespace TaTeTi
             if (b.Text == "")
             {
                 circuloCruz =! circuloCruz;
-                
+                /*
 
                 if (circuloCruz)
                 {
                     this.Cursor = new Cursor("cir.cur");
                     b.Text = "X";
-                    
+                    JuegaPc("O");
                 }
                 else
                 {
                     this.Cursor = new Cursor("cruz.cur");
                     b.Text = "O";
+                    JuegaPc("X");
                 }
+                */
+                this.Cursor = new Cursor("cruz.cur");
+                b.Text = "O";
+                JuegaPc("X");
             }
+            
             if (ChequeaGanador() != "")
             {
                 MessageBox.Show("GANARON LAS: " + ChequeaGanador(), "HAY UN GANADOR!!!");
+                Reset();
             }
+
+            // AGREGAR IA PARA QUE JUEGUE LA PC, EN PRINCIPIO UN RANDOM
+
             // MUESTO EL NOMBRE DEL BOTON DE ORIGEN
             //MessageBox.Show(b.Name);
 
@@ -104,15 +114,15 @@ namespace TaTeTi
                 return bA1.Text;
             }
 
-            if ((bC3.Text == bB2.Text) && (bB2.Text == bA3.Text) && (bC3.Text != ""))
+            if ((bC1.Text == bB2.Text) && (bB2.Text == bA3.Text) && (bC3.Text != ""))
             {
-                return bC3.Text;
+                return bC1.Text;
             }
 
             return "";
         }
 
-        private void resetF2ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Reset()
         {
             circuloCruz = true;
             this.Cursor = new Cursor("cir.cur");
@@ -122,10 +132,55 @@ namespace TaTeTi
                 button.Text = "";
             }
         }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void resetF2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Reset();
+        }
 
+        private void JuegaPc(string xoy)
+        {
+            //HACER CUMPLIR SFR DEL SOLID separar el chequeo de celdas
+            Button[] arrayBotones = new Button[9];
+            int i = 0;
+            foreach (var button in this.Controls.OfType<Button>())
+            {
+                //button.Text = "";
+                arrayBotones[i] = button;
+                i++;
+            }
+
+            Random rnd = new Random();
+            bool celdaVacia = false;
+            int indice = 0;
+            bool quedanVacias = false;
+
+            //chequear si quedan celdas vacias
+            for (i = 0; i < 9; i++)
+            {
+                if (arrayBotones[i].Text == "")
+                    {
+                    quedanVacias = true;
+                    }
+            }
+            /*
+            if (quedanVacias == false)
+            {
+                MessageBox.Show("NO QUEDAN CELDAS");
+                Reset();
+            }
+            */
+            while (!celdaVacia && quedanVacias)
+            {
+                indice = rnd.Next(0, 9);
+                if (arrayBotones[indice].Text == "")
+                {
+                    celdaVacia = true;
+                    arrayBotones[indice].Text = xoy;
+                    circuloCruz = !circuloCruz;
+                    this.Cursor = new Cursor("cir.cur");
+                }
+               
+            }
         }
     }
 }
